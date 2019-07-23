@@ -48,6 +48,10 @@ implementation (project(':react-native-amap3d')) {
 ```javascript
 import AmapNavi, { AmapNaviType } from "react-native-amap-navi";
 
+//points数组分下面两个情况:
+//1.只有一个元素，表示终点，起点会默认为当前定位位置
+//2.大于等于两个元素，头尾分别为起点和终点，中间的为经过的点，经过点最多3个
+
 AmapNavi.showRouteActivity([{
                         name: '北京站',
                         latitude: 0.0,
