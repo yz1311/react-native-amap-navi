@@ -1,6 +1,6 @@
 
 # react-native-amap-navi
-高德地图导航库(目前android没问题，ios未实现)
+高德地图导航库
 ## Getting started
 
 `$ npm install react-native-amap-navi --save`
@@ -14,10 +14,10 @@
 
 #### iOS
 
-1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ `react-native-amap-navi` and add `RNReactNativeAmapNavi.xcodeproj`
-3. In XCode, in the project navigator, select your project. Add `libRNReactNativeAmapNavi.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
-4. Run your project (`Cmd+R`)<
+1.进入ios文件夹，运行`pod install`即可
+
+注意:
+需要多编译几次才会成功，由于是ios小白，暂时找不到办法
 
 #### Android
 
