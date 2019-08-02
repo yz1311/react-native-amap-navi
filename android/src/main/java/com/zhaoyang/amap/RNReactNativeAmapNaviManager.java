@@ -56,7 +56,6 @@ import javax.annotation.Nullable;
 public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> implements AMapNaviViewListener,AMapNaviListener,LifecycleEventListener{
     private ViewGroup mViewGroup = null;
     private AMapNaviView mAMapNaviView = null;
-    private OverviewButtonView mOverviewButtonView = null;
     private ThemedReactContext mReactContext;
     private AMapNavi mAMapNavi = null;
     List<NaviLatLng> pointList1 = null;
@@ -89,8 +88,6 @@ public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> i
         mViewGroup = (ViewGroup) inflater.inflate(R.layout.navi_view,null,false);
         mAMapNaviView = (AMapNaviView)mViewGroup.findViewById(R.id.navi_view);
         mAMapNaviView.onCreate(null);
-        mOverviewButtonView = (OverviewButtonView) mViewGroup.findViewById(R.id.myOverviewButtonView);
-        mAMapNaviView.setLazyOverviewButtonView(mOverviewButtonView);
         mAMapNaviView.setAMapNaviViewListener(this);
         mAMapNaviView.recoverLockMode();
         reactContext.addLifecycleEventListener(this);
