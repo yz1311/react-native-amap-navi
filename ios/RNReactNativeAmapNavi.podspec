@@ -15,6 +15,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/author/RNReactNativeAmapNavi.git", :tag => "master" }
   s.source_files  = "**/*.{h,m}"
   s.requires_arc = true
+  s.pod_target_xcconfig = { 'OTHER_LDFLAGS' => '-ObjC' }
 
 
   s.dependency "React"

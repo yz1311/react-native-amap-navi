@@ -14,10 +14,10 @@
 
 #### iOS
 
-1.进入ios文件夹，运行`pod install`即可
+1.打开Podfile，添加`pod 'RNReactNativeAmapNavi', path: '../node_modules/react-native-amap-navi/ios'`,执行`pod install`
+2.打开项目后，点击Pods项目，然后切换到RNReactNativeAmapNavi，在TARGETS->Build Settings->Other Linker Flags 中添加-ObjC，字母 O 和 C 大写。 
 
-注意:
-需要多编译几次才会成功，由于是ios小白，暂时找不到办法
+
 
 #### Android
 

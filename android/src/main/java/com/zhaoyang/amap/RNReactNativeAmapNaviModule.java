@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Poi;
+import com.amap.api.navi.AMapNavi;
 import com.amap.api.navi.AmapNaviPage;
 import com.amap.api.navi.AmapNaviParams;
 import com.amap.api.navi.AmapNaviType;
@@ -69,6 +70,18 @@ public class RNReactNativeAmapNaviModule extends ReactContextBaseJavaModule {
     }
     AmapNaviPage.getInstance().showRouteActivity(this.reactContext, new AmapNaviParams(start, wayList, end, AmapNaviType.values()[navType]),new NaviInfoCallback(this.reactContext));
     promise.resolve(true);
+  }
+
+  @ReactMethod()
+  public void stopNavi(){
+    AMapNavi aMapNavi = AMapNavi.getInstance(getCurrentActivity().getApplicationContext());
+    aMapNavi.stopNavi();
+  }
+
+  @ReactMethod()
+  public void destoryNavi(){
+    AMapNavi aMapNavi = AMapNavi.getInstance(getCurrentActivity().getApplicationContext());
+    aMapNavi.destroy();
   }
 }
 
