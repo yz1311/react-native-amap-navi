@@ -10,6 +10,7 @@
 #import <AMapNaviKit/AMapNaviKit.h>
 #import <React/RCTViewManager.h>
 #import "RNTAMapDriveView.m"
+#import "SpeechSynthesizer.h"
 
 
 @interface AMapNaviViewManager : RCTViewManager<AMapNaviDriveManagerDelegate,AMapNaviDriveDataRepresentable, AMapNaviDriveViewDelegate>
@@ -20,6 +21,8 @@
 @property (nonatomic, strong) AMapNaviPoint *startPoint;
 @property (nonatomic, strong) AMapNaviPoint *endPoint;
 @property (nonatomic, strong) NSArray<AMapNaviPoint *> *wayPoints;
+@property (nonatomic) BOOL *speechEnabled;
+
 @end
 
 @implementation AMapNaviViewManager
@@ -43,6 +46,16 @@ RCT_EXPORT_MODULE(AMapNaviView)
 }
 
 RCT_EXPORT_VIEW_PROPERTY(onChange, RCTBubblingEventBlock)
+
+RCT_CUSTOM_VIEW_PROPERTY(speechEnabled,BOOL,AMapNaviDriveView)
+{
+    self.speechEnabled = [RCTConvert BOOL:json];
+    if([[SpeechSynthesizer sharedSpeechSynthesizer] isSpeaking])
+    {
+        //停止播报
+        [[SpeechSynthesizer sharedSpeechSynthesizer] stopSpeak];
+    }
+}
 
 RCT_CUSTOM_VIEW_PROPERTY(points,NSArray,AMapNaviDriveView)
 {
@@ -206,12 +219,23 @@ RCT_CUSTOM_VIEW_PROPERTY(lockMode, BOOL, AMapNaviDriveView)
 
 - (BOOL)driveManagerIsNaviSoundPlaying:(AMapNaviDriveManager *)driveManager
 {
-    return NO;
+    if(self.speechEnabled)
+    {
+        return [[SpeechSynthesizer sharedSpeechSynthesizer] isSpeaking];
+    }
+    else
+    {
+        return NO;
+    }
 }
 
 - (void)driveManager:(AMapNaviDriveManager *)driveManager playNaviSoundString:(NSString *)soundString soundStringType:(AMapNaviSoundType)soundStringType
 {
     NSLog(@"playNaviSoundString:{%ld:%@}", (long)soundStringType, soundString);
+    if(self.speechEnabled)
+    {
+        [[SpeechSynthesizer sharedSpeechSynthesizer] speakString:soundString];
+    }
 }
 
 - (void)driveManagerDidEndEmulatorNavi:(AMapNaviDriveManager *)driveManager

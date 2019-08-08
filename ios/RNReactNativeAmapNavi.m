@@ -1,5 +1,6 @@
 #import "RNReactNativeAmapNavi.h"
 #import <AMapNaviKit/AMapNaviKit.h>
+#import "SpeechSynthesizer.h"
 @implementation RNReactNativeAmapNavi
 
 - (dispatch_queue_t)methodQueue
@@ -60,10 +61,12 @@ RCT_EXPORT_METHOD(showRouteActivity:(NSArray *)points
 
 RCT_EXPORT_METHOD(stopNavi) {
     [[AMapNaviDriveManager sharedInstance] stopNavi];
+    [[SpeechSynthesizer sharedSpeechSynthesizer] stopSpeak];
 }
 
 RCT_EXPORT_METHOD(destoryNavi) {
     [AMapNaviDriveManager destroyInstance];
+    [[SpeechSynthesizer sharedSpeechSynthesizer] stopSpeak];
 }
 @end
   

@@ -5,7 +5,8 @@ import { requireNativeComponent } from "react-native";
 export default class AMapNaviView extends Component{
   static defaultProps = {
     settingMenuEnabled: true,
-    trafficBarEnabled: true
+    trafficBarEnabled: true,
+    speechEnabled: true
   };
 
   _onChange=(event)=> {

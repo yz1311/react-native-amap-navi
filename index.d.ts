@@ -63,12 +63,27 @@ declare module 'react-native-amap-navi' {
     errorDetail: string,
   }
 
+  interface AMapNaviLocation {
+    accuracy: number,
+    altitude: number,
+    bearing: number,
+    speed: number,
+    time: number,
+    latitude: number,
+    longitude: number,
+    curStepIndex?: number,
+    curLinkIndex?: number,
+    curPointIndex?: number,
+  }
+
   interface IAMapNaviViewProps extends ViewStyle{
     style?: any,
     points: Array<any>,
     onNaviInfoUpdate: (naviInfo: NaviInfo) => void,
     onLockMap: (isLockMap:boolean) => void,
     lockMode?: boolean,
+    //语音播报开关(默认:开)
+    speechEnabled?: boolean,
     overview?: boolean,
     settingMenuEnabled?: boolean,
     trafficBarEnabled?: boolean,
@@ -95,6 +110,7 @@ declare module 'react-native-amap-navi' {
     onArriveDestination?: () => void,
     //用户手机GPS设置是否开启的回调函数。
     onGpsOpenStatus?: (enabled:boolean) => void,
+    onLocationChange: (location:AMapNaviLocation) => void
   }
 
   export class AMapNaviView extends Component<IAMapNaviViewProps,any>{

@@ -12,6 +12,7 @@
 		0C166EAF22FAB1300037F4FE /* MAMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C166EAD22FAB1300037F4FE /* MAMapKit.framework */; };
 		0C166EB422FAB3490037F4FE /* AMapNaviViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C166EB322FAB3490037F4FE /* AMapNaviViewManager.m */; };
 		0C166EB622FAD03C0037F4FE /* RNTAMapDriveView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C166EB522FAD03C0037F4FE /* RNTAMapDriveView.m */; };
+		0C1DDE5922FC0136003143A3 /* SpeechSynthesizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1DDE5722FC0136003143A3 /* SpeechSynthesizer.m */; };
 		B3E7B58A1CC2AC0600A0062D /* RNReactNativeAmapNavi.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNReactNativeAmapNavi.m */; };
 /* End PBXBuildFile section */
 
@@ -33,6 +34,8 @@
 		0C166EAD22FAB1300037F4FE /* MAMapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MAMapKit.framework; sourceTree = "<group>"; };
 		0C166EB322FAB3490037F4FE /* AMapNaviViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AMapNaviViewManager.m; sourceTree = "<group>"; };
 		0C166EB522FAD03C0037F4FE /* RNTAMapDriveView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTAMapDriveView.m; sourceTree = "<group>"; };
+		0C1DDE5722FC0136003143A3 /* SpeechSynthesizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SpeechSynthesizer.m; path = SpeechSynthesizer/SpeechSynthesizer.m; sourceTree = "<group>"; };
+		0C1DDE5822FC0136003143A3 /* SpeechSynthesizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SpeechSynthesizer.h; path = SpeechSynthesizer/SpeechSynthesizer.h; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libRNReactNativeAmapNavi.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNReactNativeAmapNavi.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E7B5881CC2AC0600A0062D /* RNReactNativeAmapNavi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNReactNativeAmapNavi.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RNReactNativeAmapNavi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNReactNativeAmapNavi.m; sourceTree = "<group>"; };
@@ -73,6 +76,8 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				0C1DDE5822FC0136003143A3 /* SpeechSynthesizer.h */,
+				0C1DDE5722FC0136003143A3 /* SpeechSynthesizer.m */,
 				0C166EB522FAD03C0037F4FE /* RNTAMapDriveView.m */,
 				0C166EB322FAB3490037F4FE /* AMapNaviViewManager.m */,
 				B3E7B5881CC2AC0600A0062D /* RNReactNativeAmapNavi.h */,
@@ -141,6 +146,7 @@
 			files = (
 				B3E7B58A1CC2AC0600A0062D /* RNReactNativeAmapNavi.m in Sources */,
 				0C166EB422FAB3490037F4FE /* AMapNaviViewManager.m in Sources */,
+				0C1DDE5922FC0136003143A3 /* SpeechSynthesizer.m in Sources */,
 				0C166EB622FAD03C0037F4FE /* RNTAMapDriveView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
