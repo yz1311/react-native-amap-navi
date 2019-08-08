@@ -14,9 +14,14 @@
 
 #### iOS
 
-1.打开Podfile，添加`pod 'RNReactNativeAmapNavi', path: '../node_modules/react-native-amap-navi/ios'`,执行`pod install`
-2.打开项目后，点击Pods项目，然后切换到RNReactNativeAmapNavi，在TARGETS->Build Settings->Other Linker Flags 中添加-ObjC，字母 O 和 C 大写。 
+1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
+2. Go to `node_modules` ➜ `react-native-react-native-amap-navi` and add `RNReactNativeAmapNavi.xcodeproj`
+3. In XCode, in the project navigator, select your project. Add `libRNReactNativeAmapNavi.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
+4. Open `target` ➜ `Capabilities` ➜ `Background Modes`,check `Location updates`
+4. Run your project (`Cmd+R`)< 
 
+另外，需要按照官网教程添加权限和依赖(3个Framework已经包含在库中，不用手动下载添加)
+https://lbs.amap.com/api/ios-navi-sdk/guide/create-project/manual-configuration
 
 
 #### Android

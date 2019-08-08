@@ -51,11 +51,19 @@ RCT_EXPORT_METHOD(showRouteActivity:(NSArray *)points
             }
         }
     }
-    
+
     //启动
     AMapNaviCompositeManager * _compositeManager = [[AMapNaviCompositeManager alloc] init];
     [_compositeManager presentRoutePlanViewControllerWithOptions:config];
     resolve(@"");
+}
+
+RCT_EXPORT_METHOD(stopNavi) {
+    [[AMapNaviDriveManager sharedInstance] stopNavi];
+}
+
+RCT_EXPORT_METHOD(destoryNavi) {
+    [AMapNaviDriveManager destroyInstance];
 }
 @end
   

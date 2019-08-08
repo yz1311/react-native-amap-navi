@@ -30,6 +30,9 @@ DerivedData
 *.xcuserstate
 project.xcworkspace
       
+ios/AMapFoundationKit.framework/*
+ios/AMapNaviKit.framework/*
+ios/MAMapKit.framework/*
 
 # Android/IntelliJ
 #

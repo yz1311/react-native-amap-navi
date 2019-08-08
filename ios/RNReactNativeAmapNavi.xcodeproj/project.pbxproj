@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C166EA222FAAC1B0037F4FE /* AMapNaviKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C166EA122FAAC1B0037F4FE /* AMapNaviKit.framework */; };
+		0C166EAE22FAB1300037F4FE /* AMapFoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C166EAC22FAB1300037F4FE /* AMapFoundationKit.framework */; };
+		0C166EAF22FAB1300037F4FE /* MAMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C166EAD22FAB1300037F4FE /* MAMapKit.framework */; };
+		0C166EB422FAB3490037F4FE /* AMapNaviViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C166EB322FAB3490037F4FE /* AMapNaviViewManager.m */; };
+		0C166EB622FAD03C0037F4FE /* RNTAMapDriveView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C166EB522FAD03C0037F4FE /* RNTAMapDriveView.m */; };
 		B3E7B58A1CC2AC0600A0062D /* RNReactNativeAmapNavi.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNReactNativeAmapNavi.m */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +28,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0C166EA122FAAC1B0037F4FE /* AMapNaviKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AMapNaviKit.framework; sourceTree = "<group>"; };
+		0C166EAC22FAB1300037F4FE /* AMapFoundationKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AMapFoundationKit.framework; sourceTree = "<group>"; };
+		0C166EAD22FAB1300037F4FE /* MAMapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MAMapKit.framework; sourceTree = "<group>"; };
+		0C166EB322FAB3490037F4FE /* AMapNaviViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AMapNaviViewManager.m; sourceTree = "<group>"; };
+		0C166EB522FAD03C0037F4FE /* RNTAMapDriveView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTAMapDriveView.m; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libRNReactNativeAmapNavi.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNReactNativeAmapNavi.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E7B5881CC2AC0600A0062D /* RNReactNativeAmapNavi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNReactNativeAmapNavi.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RNReactNativeAmapNavi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNReactNativeAmapNavi.m; sourceTree = "<group>"; };
@@ -33,12 +43,25 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C166EAE22FAB1300037F4FE /* AMapFoundationKit.framework in Frameworks */,
+				0C166EAF22FAB1300037F4FE /* MAMapKit.framework in Frameworks */,
+				0C166EA222FAAC1B0037F4FE /* AMapNaviKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0C166EA322FAAC2F0037F4FE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0C166EAC22FAB1300037F4FE /* AMapFoundationKit.framework */,
+				0C166EAD22FAB1300037F4FE /* MAMapKit.framework */,
+				0C166EA122FAAC1B0037F4FE /* AMapNaviKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		134814211AA4EA7D00B7C361 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -50,9 +73,12 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				0C166EB522FAD03C0037F4FE /* RNTAMapDriveView.m */,
+				0C166EB322FAB3490037F4FE /* AMapNaviViewManager.m */,
 				B3E7B5881CC2AC0600A0062D /* RNReactNativeAmapNavi.h */,
 				B3E7B5891CC2AC0600A0062D /* RNReactNativeAmapNavi.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
+				0C166EA322FAAC2F0037F4FE /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -95,6 +121,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 58B511D21A9E6C8500147676;
@@ -113,6 +140,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B3E7B58A1CC2AC0600A0062D /* RNReactNativeAmapNavi.m in Sources */,
+				0C166EB422FAB3490037F4FE /* AMapNaviViewManager.m in Sources */,
+				0C166EB622FAD03C0037F4FE /* RNTAMapDriveView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,8 +232,13 @@
 		58B511F01A9E6C8500147676 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/**",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = (
-				"$(inherited)",
+					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
@@ -219,6 +253,11 @@
 		58B511F11A9E6C8500147676 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/**",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
