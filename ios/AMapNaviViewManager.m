@@ -59,10 +59,24 @@ RCT_CUSTOM_VIEW_PROPERTY(speechEnabled,BOOL,AMapNaviDriveView)
 
 RCT_CUSTOM_VIEW_PROPERTY(points,NSArray,AMapNaviDriveView)
 {
-    self.startPoint = [AMapNaviPoint locationWithLatitude:39.993135 longitude:116.474175];
-    self.endPoint   = [AMapNaviPoint locationWithLatitude:39.910267 longitude:116.370888];
-    self.wayPoints  = @[[AMapNaviPoint locationWithLatitude:39.973135 longitude:116.444175],
-                        [AMapNaviPoint locationWithLatitude:39.987125 longitude:116.353145]];
+    NSArray* points = [RCTConvert NSArray:json];
+    if(points == nil || [points count] < 2) {
+        NSLog(@"points点的数量不能小于2");
+        return;
+    }
+    self.wayPoints = [[NSMutableArray alloc] init];
+    for (NSInteger i = 0; i < [points count]; i++) {
+        NSDictionary* dict = [points objectAtIndex:i];
+        CGFloat latitude = [[dict objectForKey:@"latitude"] floatValue];
+        CGFloat longitude = [[dict objectForKey:@"longitude"] floatValue];
+        if(i == 0) {
+            self.startPoint = [AMapNaviPoint locationWithLatitude:latitude longitude:longitude];
+        } else if(i == [points count]-1) {
+            self.endPoint = [AMapNaviPoint locationWithLatitude:latitude longitude:longitude];
+        } else {
+            [self.wayPoints addObject:[AMapNaviPoint locationWithLatitude:latitude longitude:longitude]];
+        }
+    }
     [[AMapNaviDriveManager sharedInstance] calculateDriveRouteWithStartPoints:@[self.startPoint]
                                                                     endPoints:@[self.endPoint]
                                                                     wayPoints:self.wayPoints
