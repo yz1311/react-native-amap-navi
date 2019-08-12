@@ -1,6 +1,6 @@
 
 # react-native-amap-navi
-高德地图导航库
+高德地图导航库,react-native双平台,支持一键api调用和自定义view调用
 ## Getting started
 
 `$ npm install react-native-amap-navi --save`
@@ -12,16 +12,51 @@
 ### Manual installation
 
 
-#### iOS
+#### iOS(注意，请仔细观看)
+由于前面pod集成，一直报头文件找不到，现在需要手动安装(如果有擅长ios的，请提下pull request)
 
 1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ `react-native-react-native-amap-navi` and add `RNReactNativeAmapNavi.xcodeproj`
+2. Go to `node_modules` ➜ `react-native-amap-navi` and add `RNReactNativeAmapNavi.xcodeproj`
 3. In XCode, in the project navigator, select your project. Add `libRNReactNativeAmapNavi.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
 4. Open `target` ➜ `Capabilities` ➜ `Background Modes`,check `Location updates`
 4. Run your project (`Cmd+R`)< 
 
-另外，需要按照官网教程添加权限和依赖(3个Framework已经包含在库中，不用手动下载添加)
+另外，需要按照官网教程添加权限和依赖,下面是详细步骤
+
 https://lbs.amap.com/api/ios-navi-sdk/guide/create-project/manual-configuration
+
+##### 1.下载
+`基础 SDK`: AMapFoundationKit.framework
+`导航 SDK`: AMapNaviKit.framework
+`3D 地图 SDK`: MAMapKit.framework
+
+3个Framework已经依赖在库中，但是由于文件过大，https://pan.baidu.com/s/1S_ENanStzHKILL3HO9ZPEg ，提供网盘下载(官方下的是最新版，可能存在api不兼容的情况),下载完成解压将3个framework文件放在./node_modules/react-native-amap-navi/ios/下面
+
+##### 2.引入资源文件
+
+需要引入的资源文件包括：AMapNavi.bundle 和 AMap.bundle，其中：AMapNavi.bundle 位于 AMapNaviKit.framework 中，AMap.bundle 在 MAMapKit.framework 的 Resources文件夹下。
+
+在 TARGETS->Build Phases->Copy Bundle Resources 中点击“+”，弹出添加列表后，点击 “Add Other…”，添加 AMapNaviKit.framework 的 AMapNavi.bundle 到工程中，如下图所示：
+![](https://a.amap.com/lbs/static/img/ios_navi_bundle.png)
+用同样的方法添加 AMap.bundle。
+
+##### 3.引入资源文件
+定位权限
+
+由于导航依赖定位，因此需在项目的 `Info.plist` 添加 `NSLocationWhenInUseUsageDescription` 或 `NSLocationAlwaysUsageDescription` 字段，根据您的业务需求，任选其一即可。
+
+其中：
+
+> `NSLocationWhenInUseUsageDescription` 表示应用在前台的时候可以搜到更新的位置信息。
+> `NSLocationAlwaysUsageDescription` 表示应用在前台和后台
+（suspend 或 terminated）都可以获取到更新的位置数据。
+
+![](https://a.amap.com/lbs/static/img/ios_location_sdk_permission.png)
+
+ATS设置
+
+![](https://a.amap.com/lbs/static/img/ios_location_sdk_ats.png)
+
 
 
 #### Android
@@ -50,8 +85,16 @@ implementation (project(':react-native-amap3d')) {
 
 
 ## Usage
+
+#### 1.api调用方式
+高德导航sdk集成了一套默认的导航界面，包括路径规划和导航，无法定制UI，如果特殊需求，可以直接调用该api进行导航
+
+具体介绍:
+
+https://lbs.amap.com/api/android-navi-sdk/guide/navi-component/use-navi-component
+
 ```javascript
-import AmapNavi, { AmapNaviType } from "react-native-amap-navi";
+import AmapNavi, { AmapNaviType, AMapNaviView } from "react-native-amap-navi";
 
 //points数组分下面两个情况:
 //1.只有一个元素，表示终点，起点会默认为当前定位位置
@@ -63,4 +106,23 @@ AmapNavi.showRouteActivity([{
                         longitude: 0.0
                       }],AmapNaviType.DRIVER);
 ```
+
+#### 2.自定义view
+
+如果需要在导航界面上面自定义RN组件，可以使用导出的组件,具体的属性，查看[index.d.ts](https://github.com/yz1311/react-native-amap-navi/blob/master/index.d.ts)
+
+```javascript
+import AmapNavi, { AmapNaviType, AMapNaviView, NaviInfo } from "react-native-amap-navi";
+
+...
+
+<AMapNaviView
+          style={{flex:1}}
+          points={this.props.points || []}
+          autoLockCar={true}
+        />
+```
   
+[ios](https://github.com/yz1311/react-native-amap-navi/blob/master/screenshots/ios-1.ng)
+
+[android](https://github.com/yz1311/react-native-amap-navi/blob/master/screenshots/android-1.ng)
