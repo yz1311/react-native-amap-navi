@@ -170,6 +170,28 @@ public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> i
         mAMapNaviView.setViewOptions(options);
     }
 
+    @ReactProp(name = "modeType")
+    public void modeType(ViewGroup viewGroup,int modeType) {
+        AMapNaviViewOptions options = mAMapNaviView.getViewOptions();
+        options.setAutoNaviViewNightMode(false);
+        switch (modeType)
+        {
+            //白天模式
+            case 0:
+                options.setNaviNight(false);
+                break;
+            //夜间模式
+            case 1:
+                options.setNaviNight(true);
+                break;
+            //自动切换
+            case 2:
+                options.setAutoNaviViewNightMode(true);
+                break;
+        }
+        mAMapNaviView.setViewOptions(options);
+    }
+
     @Override
     public void onNaviSetting() {
         sendEvent(mViewGroup,"onNaviSetting",null);

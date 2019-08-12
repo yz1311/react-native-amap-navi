@@ -10,10 +10,34 @@ declare module 'react-native-amap-navi' {
     POIId?: string
   }
 
+  //导航模式
+  export enum AmapNaviMode {
+    //巡航模式
+    CRUISE = 3,
+    //模拟导航
+    EMULATOR = 2,
+    //GPS导航
+    GPS = 1,
+    //未开始导航
+    NONE = -1
+  }
+
   export enum AmapNaviType {
     DRIVER,
     WALK,
     RIDE
+  }
+
+  //导航界面中的地图样式类型，默认值为0
+  export enum AMapNaviModeType {
+    //白天模式
+    AMapNaviViewMapModeTypeDay = 0,
+    //黑夜模式
+    AMapNaviViewMapModeTypeNight = 1,
+    //根据日出日落时间自动切换白天黑夜
+    AMapNaviViewMapModeTypeDayNightAuto = 2,
+    //自定义地图样式(当前不支持)
+    AMapNaviViewMapModeTypeCustom = 3
   }
 
   export enum AmapMapType {
@@ -85,8 +109,16 @@ declare module 'react-native-amap-navi' {
     //语音播报开关(默认:开)
     speechEnabled?: boolean,
     overview?: boolean,
+    //导航模式，默认是GPS导航，该值改变不会立即触发重新导航，只会下次导航后才会生效
+    naviMode: AmapNaviMode,
+    //默认为白天模式
+    modeType: AMapNaviModeType,
     settingMenuEnabled?: boolean,
     trafficBarEnabled?: boolean,
+    //锁车模式下是否为了预见下一导航动作自动缩放地图,默认为false
+    autoChangeZoom?: boolean,
+    //当显示模式为非锁车模式时，是否在6秒后自动设置为锁车模式，默认为false
+    autoLockCar?: boolean,
     onInitNaviFailure?: () => void,
     onInitNaviSuccess?: () => void,
     onNaviSetting?: () => void,
@@ -100,7 +132,7 @@ declare module 'react-native-amap-navi' {
     onNaviMapMode?: (naviType:AmapNaviType) => void,
     onMapTypeChanged?: (mapType:AmapMapType) => void,
     onNaviViewShowMode?: (shoMode:AMapNaviViewShowMode) => void,
-    onStartNavi?: (naviType:AmapNaviType) => void,
+    onStartNavi?: (naviType:AmapNaviMode) => void,
     onGetNavigationText?: (text:String) => void,
     //路线规划成功回调
     onCalculateRouteSuccess?: (result:AMapCalcRouteResult) => void,

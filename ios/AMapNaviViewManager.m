@@ -83,6 +83,38 @@ RCT_CUSTOM_VIEW_PROPERTY(points,NSArray,AMapNaviDriveView)
                                                               drivingStrategy:AMapNaviDrivingStrategySingleDefault];
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(modeType, NSInteger, AMapNaviDriveView)
+{
+    switch ([RCTConvert NSInteger:json]) {
+        //白天模式
+        case 0:
+            [self.driveView setAutoSwitchDayNightType:false];
+            self.driveView.showStandardNightType = false;
+            break;
+        //夜间模式
+        case 1:
+            [self.driveView setAutoSwitchDayNightType:false];
+            self.driveView.showStandardNightType = true;
+            break;
+        //自动切换
+        case 2:
+            [self.driveView setAutoSwitchDayNightType:true];
+            break;
+        default:
+            break;
+    }
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(autoChangeZoom, BOOL, AMapNaviDriveView)
+{
+    [self.driveView setAutoZoomMapLevel:[RCTConvert BOOL:json]];
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(autoLockCar, BOOL, AMapNaviDriveView)
+{
+    [self.driveView setAutoSwitchShowModeToCarPositionLocked:[RCTConvert BOOL:json]];
+}
+
 RCT_CUSTOM_VIEW_PROPERTY(lockMode, BOOL, AMapNaviDriveView)
 {
     if([RCTConvert BOOL:json])
