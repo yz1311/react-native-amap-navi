@@ -111,9 +111,12 @@ AmapNavi.showRouteActivity([{
 
 如果需要在导航界面上面自定义RN组件，可以使用导出的组件,具体的属性，查看[index.d.ts](https://github.com/yz1311/react-native-amap-navi/blob/master/index.d.ts)
 
+
 ```javascript
 import AmapNavi, { AmapNaviType, AMapNaviView, NaviInfo } from "react-native-amap-navi";
 
+...
+//points跟api调用不一样，必须最少传递2个元素，所以如果需要当前位置，需要自己手动获取
 ...
 
 <AMapNaviView
@@ -123,6 +126,6 @@ import AmapNavi, { AmapNaviType, AMapNaviView, NaviInfo } from "react-native-ama
         />
 ```
   
-[ios](https://github.com/yz1311/react-native-amap-navi/blob/master/screenshots/ios-1.ng)
+![ios](https://github.com/yz1311/react-native-amap-navi/blob/master/screenshots/ios-1.png)
 
-[android](https://github.com/yz1311/react-native-amap-navi/blob/master/screenshots/android-1.ng)
+![android](https://github.com/yz1311/react-native-amap-navi/blob/master/screenshots/android-1.png)
