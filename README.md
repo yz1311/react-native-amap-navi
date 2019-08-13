@@ -113,16 +113,30 @@ AmapNavi.showRouteActivity([{
 
 
 ```javascript
-import AmapNavi, { AmapNaviType, AMapNaviView, NaviInfo } from "react-native-amap-navi";
+import AmapNavi, { AmapNaviType, AMapNaviView, NaviInfo, AmapNaviMode } from "react-native-amap-navi";
 
 ...
 //points跟api调用不一样，必须最少传递2个元素，所以如果需要当前位置，需要自己手动获取
 ...
 
+componentDidMount() {
+    //延迟一段时间导航，防止出现组件未初始化
+    setTimeout(()=>{
+      //可以直接传入points参数，优先使用改否则，否则会使用points属性传入的值
+      //默认是GPS导航
+      this.mapNaviView.calculateRoute(this.props.points||[],2);
+    },500);
+  }
+
 <AMapNaviView
           style={{flex:1}}
+          ref={ref=>this.mapNaviView = ref}
           points={this.props.points || []}
           autoLockCar={true}
+          onCalculateRouteSuccess={result=>{
+            //路径规划成功后，开始导航
+            this.mapNaviView.startNavi(AmapNaviMode.EMULATOR);
+          }}
         />
 ```
   

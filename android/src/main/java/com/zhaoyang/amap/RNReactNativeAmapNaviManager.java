@@ -35,6 +35,7 @@ import com.autonavi.tbt.TrafficFacilityInfo;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
@@ -53,14 +54,19 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+
 public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> implements AMapNaviViewListener,AMapNaviListener,LifecycleEventListener{
     private ViewGroup mViewGroup = null;
     private AMapNaviView mAMapNaviView = null;
     private ThemedReactContext mReactContext;
+    private int mNaviMode = 0;
+    private boolean hasInit = false;
     private AMapNavi mAMapNavi = null;
     List<NaviLatLng> pointList1 = null;
     List<NaviLatLng> pointList2 = null;
     List<NaviLatLng> pointList3 = null;
+    private final int CALCULATE_ROUTE = 1;
+    private final int START_NAVI = 2;
     @Nonnull
     @Override
     public String getName() {
@@ -100,44 +106,18 @@ public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> i
 
     @ReactProp(name = "points")
     public void setPoints(ViewGroup viewGroup,ReadableArray points) {
-        Log.i("test","1~"+points.size());
         //驾车路径规划计算,计算单条路径
         if(points==null || points.size() <1) {
             return;
         }
-        Log.i("test","2");
-        NaviLatLng start = null, end = null;
-        List<NaviLatLng> wayList = new ArrayList();//途径点目前最多支持3个。
-        //默认当前作为作为起点，该点作为结束位置
-        for (int i=0;i<points.size();i++) {
-            ReadableMap map = points.getMap(i);
-            NaviLatLng poi = new NaviLatLng(map.getDouble("latitude"),map.getDouble("longitude"));
-            if(i == 0)
-            {
-                if(points.size() == 1) {
-                    end = poi;
-                } else {
-                    start = poi;
-                }
-            } else if(i == points.size()-1) {
-                end = poi;
-            } else {
-                wayList.add(poi);
-            }
-        }
-        List<NaviLatLng> startList = new ArrayList<NaviLatLng>();
-        List<NaviLatLng> endList = new ArrayList<NaviLatLng>();
-        if(start !=null) {
-            startList.add(start);
-        }
-        if(end !=null) {
-            endList.add(end);
-        }
-        int strategyFlag = 0;
-        Log.i("test","3");
-        pointList1 = startList;
-        pointList2 = wayList;
-        pointList3 = endList;
+        this.parsePointToNative(points);
+    }
+
+    @ReactProp(name = "naviMode")
+    public void naviMode(ViewGroup viewGroup,int naviMode) {
+        this.mNaviMode = naviMode;
+
+        this.hasInit = true;
     }
 
     @ReactProp(name = "lockMode")
@@ -146,6 +126,11 @@ public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> i
         if(lockMode){
             mAMapNaviView.recoverLockMode();
         }
+    }
+
+    @ReactProp(name = "speechEnabled")
+    public void speechEnabled(ViewGroup viewGroup,boolean speechEnabled) {
+        mAMapNavi.setUseInnerVoice(speechEnabled);
     }
 
     @ReactProp(name = "overview")
@@ -189,6 +174,24 @@ public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> i
                 options.setAutoNaviViewNightMode(true);
                 break;
         }
+        mAMapNaviView.setViewOptions(options);
+    }
+    @ReactMethod()
+    public void sendComand(){
+
+    }
+
+    @ReactProp(name = "autoChangeZoom")
+    public void autoChangeZoom(ViewGroup viewGroup,boolean autoChangeZoom) {
+        AMapNaviViewOptions options = mAMapNaviView.getViewOptions();
+        options.setAutoChangeZoom(autoChangeZoom);
+        mAMapNaviView.setViewOptions(options);
+    }
+
+    @ReactProp(name = "autoLockCar")
+    public void autoLockCar(ViewGroup viewGroup,boolean autoLockCar) {
+        AMapNaviViewOptions options = mAMapNaviView.getViewOptions();
+        options.setAutoLockCar(autoLockCar);
         mAMapNaviView.setViewOptions(options);
     }
 
@@ -275,6 +278,89 @@ public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> i
         mAMapNavi.destroy();
     }
 
+    private void parsePointToNative(ReadableArray points)
+    {
+        NaviLatLng start = null, end = null;
+        List<NaviLatLng> wayList = new ArrayList();//途径点目前最多支持3个。
+        //默认当前作为作为起点，该点作为结束位置
+        for (int i=0;i<points.size();i++) {
+            ReadableMap map = points.getMap(i);
+            NaviLatLng poi = new NaviLatLng(map.getDouble("latitude"),map.getDouble("longitude"));
+            if(i == 0)
+            {
+                if(points.size() == 1) {
+                    end = poi;
+                } else {
+                    start = poi;
+                }
+            } else if(i == points.size()-1) {
+                end = poi;
+            } else {
+                wayList.add(poi);
+            }
+        }
+        List<NaviLatLng> startList = new ArrayList<NaviLatLng>();
+        List<NaviLatLng> endList = new ArrayList<NaviLatLng>();
+        if(start !=null) {
+            startList.add(start);
+        }
+        if(end !=null) {
+            endList.add(end);
+        }
+        pointList1 = startList;
+        pointList2 = wayList;
+        pointList3 = endList;
+    }
+
+    @Nullable
+    @Override
+    public Map<String, Integer> getCommandsMap() {
+        return MapBuilder.of(
+                "calculateRoute",CALCULATE_ROUTE,
+                "startNavi",START_NAVI
+        );
+    }
+
+    @Override
+    public void receiveCommand(@Nonnull ViewGroup root, int commandId, @Nullable ReadableArray args) {
+        switch (commandId)
+        {
+            case CALCULATE_ROUTE:
+                ReadableArray points = args.getArray(0);
+                int strategyFlag = 0;
+                strategyFlag = args.getInt(1);
+                if(points!=null&&points.size()>=2)
+                {
+                    this.parsePointToNative(points);
+                }
+                mAMapNavi.calculateDriveRoute(pointList1,pointList3,pointList2,strategyFlag);
+                break;
+            case START_NAVI:
+                //默认是gps
+                int naviMode = 1;
+                try {
+                    naviMode = args.getInt(0);
+                    switch (naviMode)
+                    {
+                        case 1:
+                            mAMapNavi.startNavi(NaviType.GPS);
+                            break;
+                        case 2:
+                            mAMapNavi.startNavi(NaviType.EMULATOR);
+                            break;
+                        case 3:
+                            mAMapNavi.startNavi(NaviType.CRUISE);
+                            break;
+                    }
+                } catch (Exception e)
+                {
+
+                }
+
+                break;
+        }
+    }
+
     /**
      *
      * @param eventName
@@ -309,13 +395,6 @@ public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> i
 
     @Override
     public void onInitNaviSuccess() {
-        int strategyFlag = 0;
-        try {
-            strategyFlag = mAMapNavi.strategyConvert(true, false, false, false, false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        mAMapNavi.calculateDriveRoute(pointList1,pointList3,pointList2,strategyFlag);
         sendEvent(mViewGroup,"onInitNaviSuccess",null);
     }
 
@@ -331,7 +410,20 @@ public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> i
 
     @Override
     public void onLocationChange(AMapNaviLocation aMapNaviLocation) {
-
+        WritableMap map = Arguments.createMap();
+        map.putDouble("accuracy",aMapNaviLocation.getAccuracy());
+        map.putDouble("altitude",aMapNaviLocation.getAltitude());
+        map.putDouble("bearing",aMapNaviLocation.getBearing());
+        map.putDouble("speed",aMapNaviLocation.getSpeed());
+        map.putDouble("time",aMapNaviLocation.getTime());
+        if(aMapNaviLocation.getCoord()!=null) {
+            map.putDouble("latitude",aMapNaviLocation.getCoord().getLatitude());
+            map.putDouble("longitude",aMapNaviLocation.getCoord().getLongitude());
+        }
+        map.putInt("curStepIndex",aMapNaviLocation.getCurStepIndex());
+        map.putInt("curLinkIndex",aMapNaviLocation.getCurLinkIndex());
+        map.putInt("curPointIndex",aMapNaviLocation.getCurPointIndex());
+        sendEvent(mViewGroup,"onLocationChange",map);
     }
 
     @Override
@@ -529,7 +621,6 @@ public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> i
 //        RouteOverLay routeOverLay = new RouteOverLay(aMap, aMapNaviPath, this.mReactContext);
 //        //添加到AMapNaviView上。
 //        routeOverLay.addToMap();
-        mAMapNavi.startNavi(NaviType.EMULATOR);
         WritableMap map = Arguments.createMap();
         map.putInt("errorCode",aMapCalcRouteResult.getErrorCode());
         map.putInt("calcRouteType",aMapCalcRouteResult.getCalcRouteType());

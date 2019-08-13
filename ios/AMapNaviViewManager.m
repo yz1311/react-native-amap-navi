@@ -20,8 +20,9 @@
 @property (nonatomic, retain) RNTAMapDriveView* driveView;
 @property (nonatomic, strong) AMapNaviPoint *startPoint;
 @property (nonatomic, strong) AMapNaviPoint *endPoint;
-@property (nonatomic, strong) NSArray<AMapNaviPoint *> *wayPoints;
+@property (nonatomic, strong) NSMutableArray<AMapNaviPoint *> *wayPoints;
 @property (nonatomic) BOOL *speechEnabled;
+@property (nonatomic) NSInteger *navMode;
 
 @end
 
@@ -46,6 +47,35 @@ RCT_EXPORT_MODULE(AMapNaviView)
 }
 
 RCT_EXPORT_VIEW_PROPERTY(onChange, RCTBubblingEventBlock)
+
+RCT_EXPORT_METHOD(calculateRoute:(nonnull NSNumber *)reactTag
+                  points:(nonnull NSArray *) points
+                  strategy:(NSInteger) strategy
+                  ) {
+    if(strategy == nil)
+    {
+        strategy = AMapNaviDrivingStrategySingleDefault;
+    }
+    if(points != nil || [points count] >= 2) {
+        self.wayPoints = [[NSMutableArray alloc] init];
+        for (NSInteger i = 0; i < [points count]; i++) {
+            NSDictionary* dict = [points objectAtIndex:i];
+            CGFloat latitude = [[dict objectForKey:@"latitude"] floatValue];
+            CGFloat longitude = [[dict objectForKey:@"longitude"] floatValue];
+            if(i == 0) {
+                self.startPoint = [AMapNaviPoint locationWithLatitude:latitude longitude:longitude];
+            } else if(i == [points count]-1) {
+                self.endPoint = [AMapNaviPoint locationWithLatitude:latitude longitude:longitude];
+            } else {
+                [self.wayPoints addObject:[AMapNaviPoint locationWithLatitude:latitude longitude:longitude]];
+            }
+        }
+    }
+    [[AMapNaviDriveManager sharedInstance] calculateDriveRouteWithStartPoints:@[self.startPoint]
+                                                                    endPoints:@[self.endPoint]
+                                                                    wayPoints:self.wayPoints
+                                                              drivingStrategy:strategy];
+}
 
 RCT_CUSTOM_VIEW_PROPERTY(speechEnabled,BOOL,AMapNaviDriveView)
 {
@@ -77,10 +107,6 @@ RCT_CUSTOM_VIEW_PROPERTY(points,NSArray,AMapNaviDriveView)
             [self.wayPoints addObject:[AMapNaviPoint locationWithLatitude:latitude longitude:longitude]];
         }
     }
-    [[AMapNaviDriveManager sharedInstance] calculateDriveRouteWithStartPoints:@[self.startPoint]
-                                                                    endPoints:@[self.endPoint]
-                                                                    wayPoints:self.wayPoints
-                                                              drivingStrategy:AMapNaviDrivingStrategySingleDefault];
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(modeType, NSInteger, AMapNaviDriveView)
@@ -233,18 +259,24 @@ RCT_CUSTOM_VIEW_PROPERTY(lockMode, BOOL, AMapNaviDriveView)
 - (void)driveManagerOnCalculateRouteSuccess:(AMapNaviDriveManager *)driveManager
 {
     NSLog(@"onCalculateRouteSuccess");
-    
-    [[AMapNaviDriveManager sharedInstance] startEmulatorNavi];
+    [self sendEvent:self.driveView params:@{@"type":@"onCalculateRouteSuccess",@"params":@{
+                                                    
+                                                    }}];
 }
 
 - (void)driveManager:(AMapNaviDriveManager *)driveManager onCalculateRouteFailure:(NSError *)error
 {
     NSLog(@"onCalculateRouteFailure:{%ld - %@}", (long)error.code, error.localizedDescription);
+    [self sendEvent:self.driveView params:@{@"type":@"onCalculateRouteFailure",@"params":@{
+                                                    @"errorCode":@(error.code),
+                                                    @"errorDetail":error.domain
+                                                    }}];
 }
 
 - (void)driveManager:(AMapNaviDriveManager *)driveManager didStartNavi:(AMapNaviMode)naviMode
 {
     NSLog(@"didStartNavi");
+    [self sendEvent:self.driveView params:@{@"type":@"onStartNavi",@"params":@{}}];
 }
 
 - (void)driveManagerNeedRecalculateRouteForYaw:(AMapNaviDriveManager *)driveManager

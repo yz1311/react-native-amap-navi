@@ -10,34 +10,16 @@ declare module 'react-native-amap-navi' {
     POIId?: string
   }
 
-  //导航模式
-  export enum AmapNaviMode {
-    //巡航模式
-    CRUISE = 3,
-    //模拟导航
-    EMULATOR = 2,
-    //GPS导航
+  enum AmapNaviMode {
     GPS = 1,
-    //未开始导航
-    NONE = -1
+    EMULATOR = 2,
+    CRUISE = 3
   }
 
   export enum AmapNaviType {
     DRIVER,
     WALK,
     RIDE
-  }
-
-  //导航界面中的地图样式类型，默认值为0
-  export enum AMapNaviModeType {
-    //白天模式
-    AMapNaviViewMapModeTypeDay = 0,
-    //黑夜模式
-    AMapNaviViewMapModeTypeNight = 1,
-    //根据日出日落时间自动切换白天黑夜
-    AMapNaviViewMapModeTypeDayNightAuto = 2,
-    //自定义地图样式(当前不支持)
-    AMapNaviViewMapModeTypeCustom = 3
   }
 
   export enum AmapMapType {
@@ -60,6 +42,31 @@ declare module 'react-native-amap-navi' {
     SHOWMODE_DISPLAYOVERVIEW	 = 2,
     //锁车状态
     SHOWMODE_LOCKCAR	 = 1,
+  }
+
+  export enum AMapNaviDrivingStrategy {
+    AMapNaviDrivingStrategySingleDefault = 0,                               ///< 0 单路径: 默认,速度优先(常规最快)
+    AMapNaviDrivingStrategySingleAvoidCost = 1,                             ///< 1 单路径: 避免收费
+    AMapNaviDrivingStrategySinglePrioritiseDistance = 2,                    ///< 2 单路径: 距离优先
+    AMapNaviDrivingStrategySingleAvoidExpressway = 3,                       ///< 3 单路径: 不走快速路
+    AMapNaviDrivingStrategySingleAvoidCongestion = 4,                       ///< 4 单路径: 躲避拥堵
+    AMapNaviDrivingStrategySinglePrioritiseSpeedCostDistance = 5,           ///< 5 单路径: 速度优先 & 费用优先 & 距离优先
+    AMapNaviDrivingStrategySingleAvoidHighway = 6,                          ///< 6 单路径: 不走高速
+    AMapNaviDrivingStrategySingleAvoidHighwayAndCost = 7,                   ///< 7 单路径: 不走高速 & 避免收费
+    AMapNaviDrivingStrategySingleAvoidCostAndCongestion = 8,                ///< 8 单路径: 避免收费 & 躲避拥堵
+    AMapNaviDrivingStrategySingleAvoidHighwayAndCostAndCongestion = 9,      ///< 9 单路径: 不走高速 & 避免收费 & 躲避拥堵
+
+    AMapNaviDrivingStrategyMultipleDefault = 10,                            ///< 10 多路径: 默认,速度优先(常规最快)
+    AMapNaviDrivingStrategyMultipleShortestTimeDistance = 11,               ///< 11 多路径: 时间最短 & 距离最短
+    AMapNaviDrivingStrategyMultipleAvoidCongestion = 12,                    ///< 12 多路径: 躲避拥堵
+    AMapNaviDrivingStrategyMultipleAvoidHighway = 13,                       ///< 13 多路径: 不走高速
+    AMapNaviDrivingStrategyMultipleAvoidCost = 14,                          ///< 14 多路径: 避免收费
+    AMapNaviDrivingStrategyMultipleAvoidHighwayAndCongestion = 15,          ///< 15 多路径: 不走高速 & 躲避拥堵
+    AMapNaviDrivingStrategyMultipleAvoidHighwayAndCost = 16,                ///< 16 多路径: 不走高速 & 避免收费
+    AMapNaviDrivingStrategyMultipleAvoidCostAndCongestion = 17,             ///< 17 多路径: 避免收费 & 躲避拥堵
+    AMapNaviDrivingStrategyMultipleAvoidHighwayAndCostAndCongestion = 18,   ///< 18 多路径: 不走高速 & 避免收费 & 躲避拥堵
+    AMapNaviDrivingStrategyMultiplePrioritiseHighway = 19,                  ///< 19 多路径: 高速优先
+    AMapNaviDrivingStrategyMultiplePrioritiseHighwayAvoidCongestion = 20,   ///< 20 多路径: 高速优先 & 躲避拥堵
   }
 
   export interface NaviInfo {
@@ -106,13 +113,8 @@ declare module 'react-native-amap-navi' {
     onNaviInfoUpdate: (naviInfo: NaviInfo) => void,
     onLockMap: (isLockMap:boolean) => void,
     lockMode?: boolean,
-    //语音播报开关(默认:开)
     speechEnabled?: boolean,
     overview?: boolean,
-    //导航模式，默认是GPS导航，该值改变不会立即触发重新导航，只会下次导航后才会生效
-    naviMode: AmapNaviMode,
-    //默认为白天模式
-    modeType: AMapNaviModeType,
     settingMenuEnabled?: boolean,
     trafficBarEnabled?: boolean,
     //锁车模式下是否为了预见下一导航动作自动缩放地图,默认为false
@@ -132,10 +134,11 @@ declare module 'react-native-amap-navi' {
     onNaviMapMode?: (naviType:AmapNaviType) => void,
     onMapTypeChanged?: (mapType:AmapMapType) => void,
     onNaviViewShowMode?: (shoMode:AMapNaviViewShowMode) => void,
-    onStartNavi?: (naviType:AmapNaviMode) => void,
+    onStartNavi?: (naviType:AmapNaviType) => void,
     onGetNavigationText?: (text:String) => void,
     //路线规划成功回调
     onCalculateRouteSuccess?: (result:AMapCalcRouteResult) => void,
+    onCalculateRouteFailure?: (result:AMapCalcRouteResult) => void,
     //驾车路径导航到达某个途经点的回调函数。
     //wayID - 到达途径点的编号，标号从0开始，依次累加。
     onArrivedWayPoint?: (wayID:number) => void,
@@ -146,7 +149,8 @@ declare module 'react-native-amap-navi' {
   }
 
   export class AMapNaviView extends Component<IAMapNaviViewProps,any>{
-
+    calculateRoute: (points?:Array<Poi>, strategy?:AMapNaviDrivingStrategy)=>void,
+    startNavi: (naviMode:AmapNaviMode)=>void
   }
 
   export default class Navi{

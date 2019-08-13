@@ -1,22 +1,36 @@
 import React, { Component } from "react";
-import { requireNativeComponent } from "react-native";
+import { requireNativeComponent, findNodeHandle, UIManager } from "react-native";
 
 
 export default class AMapNaviView extends Component{
   static defaultProps = {
     settingMenuEnabled: true,
     trafficBarEnabled: true,
-    speechEnabled: true,
-    //默认是gps导航
-    naviMode: 1,
-    //默认为白天模式
-    modeType: 0,
+    speechEnabled: true
   };
 
   _onChange=(event)=> {
     if (typeof this.props[event.nativeEvent.type] === 'function') {
       this.props[event.nativeEvent.type](event.nativeEvent.params);
     }
+  }
+
+  _sendCommand(command: string, params?: []) {
+    UIManager.dispatchViewManagerCommand(
+      findNodeHandle(this),
+      UIManager.AMapNaviView.Commands[command],
+      params,
+    )
+  }
+
+  calculateRoute = (points=[],strategy=0)=>{
+    this._sendCommand('calculateRoute',[
+      points,strategy
+    ]);
+  }
+
+  startNavi = (naviMode = 0)=>{
+    this._sendCommand('startNavi',[naviMode]);
   }
 
   render () {
