@@ -149,8 +149,8 @@ declare module 'react-native-amap-navi' {
   }
 
   export class AMapNaviView extends Component<IAMapNaviViewProps,any>{
-    calculateRoute: (points?:Array<Poi>, strategy?:AMapNaviDrivingStrategy)=>void,
-    startNavi: (naviMode:AmapNaviMode)=>void
+    calculateRoute: (points?:Array<Poi>, strategy?:AMapNaviDrivingStrategy)=>void;
+    startNavi: (naviMode:AmapNaviMode)=>void;
   }
 
   export default class Navi{
