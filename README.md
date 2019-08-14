@@ -87,7 +87,7 @@ implementation (project(':react-native-amap3d')) {
 ## Usage
 
 #### 1.api调用方式
-高德导航sdk集成了一套默认的导航界面，包括路径规划和导航，无法定制UI，如果特殊需求，可以直接调用该api进行导航
+高德导航sdk集成了一套默认的导航界面，包括路径规划和导航，无法定制UI，如无特殊需求，可以直接调用该api进行导航
 
 具体介绍:
 
@@ -122,7 +122,7 @@ import AmapNavi, { AmapNaviType, AMapNaviView, NaviInfo, AmapNaviMode } from "re
 componentDidMount() {
     //延迟一段时间导航，防止出现组件未初始化
     setTimeout(()=>{
-      //可以直接传入points参数，优先使用改否则，否则会使用points属性传入的值
+      //可以直接传入points参数，优先使用该points，否则会使用points属性传入的值
       //默认是GPS导航
       this.mapNaviView.calculateRoute(this.props.points||[],2);
     },500);

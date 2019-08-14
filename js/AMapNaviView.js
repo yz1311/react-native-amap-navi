@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { requireNativeComponent, findNodeHandle, UIManager } from "react-native";
+import { requireNativeComponent, findNodeHandle, UIManager, Platform } from "react-native";
 
 
 export default class AMapNaviView extends Component{
@@ -11,7 +11,40 @@ export default class AMapNaviView extends Component{
 
   _onChange=(event)=> {
     if (typeof this.props[event.nativeEvent.type] === 'function') {
-      this.props[event.nativeEvent.type](event.nativeEvent.params);
+      switch (event.nativeEvent.type) {
+        case 'onCalculateRouteSuccess':
+          //ios跟android的枚举值不一致,以android为准
+          if(Platform.OS === 'ios')
+          {
+            switch (event.nativeEvent.params.calcRouteType) {
+              case 1:
+                this.props[event.nativeEvent.type]({
+                  ...event.nativeEvent.params,
+                  calcRouteType: 0
+                });
+                break;
+              case 2:
+                this.props[event.nativeEvent.type]({
+                  ...event.nativeEvent.params,
+                  calcRouteType: 1
+                });
+                break;
+              case 5:
+                this.props[event.nativeEvent.type]({
+                  ...event.nativeEvent.params,
+                  calcRouteType: 2
+                });
+                break;
+              default:
+                this.props[event.nativeEvent.type](event.nativeEvent.params);
+                break;
+            }
+          }
+          break;
+        default:
+          this.props[event.nativeEvent.type](event.nativeEvent.params);
+          break;
+      }
     }
   }
 

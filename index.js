@@ -63,6 +63,19 @@ export const AMapNaviDrivingStrategy = {
     AMapNaviDrivingStrategyMultiplePrioritiseHighwayAvoidCongestion: 20,   ///< 20 多路径: 高速优先 & 躲避拥堵
 }
 
+export const AMapNaviRingType = {
+    //无
+    RING_NULL: 0,
+    //偏航重算的提示音
+    RING_REROUTE: 1,
+    //即将到达转向路口时的提示音
+    RING_TURN: 100,
+    //导航状态下通过测速电子眼的提示音
+    RING_CAMERA: 101,
+    //巡航状态下通过电子眼（所有类型）的提示音
+    RING_EDOG: 102,
+}
+
 export const AMapNaviView = AMapNaviView1;
 
 export default {

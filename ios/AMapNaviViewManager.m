@@ -21,8 +21,9 @@
 @property (nonatomic, strong) AMapNaviPoint *startPoint;
 @property (nonatomic, strong) AMapNaviPoint *endPoint;
 @property (nonatomic, strong) NSMutableArray<AMapNaviPoint *> *wayPoints;
-@property (nonatomic) BOOL *speechEnabled;
+@property (nonatomic) BOOL speechEnabled;
 @property (nonatomic) NSInteger *navMode;
+@property (nonatomic) BOOL noData;
 
 @end
 
@@ -34,7 +35,7 @@ RCT_EXPORT_MODULE(AMapNaviView)
 {
     self.driveView =  [RNTAMapDriveView new];
     self.driveView.delegate = self;
-    [self.driveView setShowMode:AMapNaviRideViewShowModeOverview];
+    [self.driveView setShowMode:AMapNaviDriveViewShowModeOverview];
     [[AMapNaviDriveManager sharedInstance] setDelegate:self];
     //设置后才会显示导航线路
     [[AMapNaviDriveManager sharedInstance] addDataRepresentative:self.driveView];
@@ -97,6 +98,11 @@ RCT_EXPORT_METHOD(startNavi:(nonnull NSNumber *)reactTag
         default:
             break;
     }
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(noData,BOOL,AMapNaviDriveView)
+{
+    self.noData = [RCTConvert BOOL:json];
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(speechEnabled,BOOL,AMapNaviDriveView)
@@ -167,11 +173,11 @@ RCT_CUSTOM_VIEW_PROPERTY(lockMode, BOOL, AMapNaviDriveView)
 {
     if([RCTConvert BOOL:json])
     {
-        [self.driveView setShowMode:AMapNaviRideViewShowModeCarPositionLocked];
+        [self.driveView setShowMode:AMapNaviDriveViewShowModeCarPositionLocked];
     }
     else
     {
-        [self.driveView setShowMode:AMapNaviRideViewShowModeNormal];
+        [self.driveView setShowMode:AMapNaviDriveViewShowModeNormal];
     }
 }
 
@@ -237,18 +243,35 @@ RCT_CUSTOM_VIEW_PROPERTY(lockMode, BOOL, AMapNaviDriveView)
 - (void)driveManager:(AMapNaviDriveManager *)driveManager showCrossImage:(UIImage *)crossImage
 {
     NSLog(@"showCrossImage");
-    
+    NSString* imgData;
+    if(!self.noData)
+    {
+        NSData *data = UIImageJPEGRepresentation(crossImage, 1.0f);
+        imgData = [data base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+    }
+    [self sendEvent:self.driveView params:@{@"type":@"showCross",@"params":imgData}];
 }
 
 - (void)driveManagerHideCrossImage:(AMapNaviDriveManager *)driveManager
 {
     NSLog(@"hideCrossImage");
+    [self sendEvent:self.driveView params:@{@"type":@"hideCross",@"params":@{}}];
     
 }
 
 - (void)driveManager:(AMapNaviDriveManager *)driveManager showLaneBackInfo:(NSString *)laneBackInfo laneSelectInfo:(NSString *)laneSelectInfo
 {
     NSLog(@"showLaneInfo");
+    NSString* imgData;
+    if(!self.noData)
+    {
+        NSData *data = UIImageJPEGRepresentation(crossImage, 1.0f);
+        imgData = [data base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+    }
+    laneSelectInfo.
+    [self sendEvent:self.driveView params:@{@"type":@"showLaneBackInfo",@"params":@{
+                                                    
+                                                    }}];
 }
 
 - (void)driveManagerHideLaneInfo:(AMapNaviDriveManager *)driveManager
@@ -280,9 +303,14 @@ RCT_CUSTOM_VIEW_PROPERTY(lockMode, BOOL, AMapNaviDriveView)
 
 - (void)driveManagerOnCalculateRouteSuccess:(AMapNaviDriveManager *)driveManager
 {
-    NSLog(@"onCalculateRouteSuccess");
+   
+}
+
+- (void)driveManager:(AMapNaviDriveManager *)driveManager onCalculateRouteSuccessWithType:(AMapNaviRoutePlanType)type
+{
+     NSLog(@"onCalculateRouteSuccess");
     [self sendEvent:self.driveView params:@{@"type":@"onCalculateRouteSuccess",@"params":@{
-                                                    
+                                                    @"calcRouteType":@(type)
                                                     }}];
 }
 
@@ -341,12 +369,32 @@ RCT_CUSTOM_VIEW_PROPERTY(lockMode, BOOL, AMapNaviDriveView)
 - (void)driveManagerDidEndEmulatorNavi:(AMapNaviDriveManager *)driveManager
 {
     NSLog(@"didEndEmulatorNavi");
+    [self sendEvent:self.driveView params:@{@"type":@"onEndEmulatorNavi",@"params":@{}}];
 }
 
 - (void)driveManagerOnArrivedDestination:(AMapNaviDriveManager *)driveManager
 {
     NSLog(@"onArrivedDestination");
     [self sendEvent:self.driveView params:@{@"type":@"onArriveDestination",@"params":@{}}];
+}
+
+- (void)driveManager:(AMapNaviDriveManager *)driveManager onNaviPlayRing:(AMapNaviRingType)ringType
+{
+    [self sendEvent:self.driveView params:@{@"type":@"onPlayRing",@"params":@(ringType)}];
+}
+
+- (void)driveManager:(AMapNaviDriveManager *)driveManager postRouteNotification:(AMapNaviRouteNotifyData *)notifyData
+{
+    [self sendEvent:self.driveView params:@{@"type":@"onNaviRouteNotify",@"params":@{
+                                                    @"distance":@(notifyData.distance),
+                                                    @"latitude":@(notifyData.coordinate!=nil?notifyData.coordinate.latitude:0),
+                                                    @"longitude":@(notifyData.coordinate!=nil?notifyData.coordinate.longitude:0),
+                                                    @"notifyType":@(notifyData.type),
+                                                    @"reason":notifyData.reason,
+                                                    @"roadName":notifyData.roadName,
+                                                    @"subTitle":notifyData.subTitle,
+                                                    @"isSuccess":@(notifyData.success),
+                                                    }}];
 }
 
 #pragma mark - AMapNaviDriveViewDelegate

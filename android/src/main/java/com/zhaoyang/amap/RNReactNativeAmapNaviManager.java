@@ -1,5 +1,7 @@
 package com.zhaoyang.amap;
 
+import android.graphics.Bitmap;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -47,6 +49,8 @@ import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +71,7 @@ public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> i
     List<NaviLatLng> pointList3 = null;
     private final int CALCULATE_ROUTE = 1;
     private final int START_NAVI = 2;
+    private boolean noData = true;
     @Nonnull
     @Override
     public String getName() {
@@ -126,6 +131,11 @@ public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> i
         if(lockMode){
             mAMapNaviView.recoverLockMode();
         }
+    }
+
+    @ReactProp(name = "noData")
+    public void noData(ViewGroup viewGroup,boolean noData) {
+        this.noData = noData;
     }
 
     @ReactProp(name = "speechEnabled")
@@ -522,7 +532,7 @@ public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> i
 
     @Override
     public void updateCameraInfo(AMapNaviCameraInfo[] aMapNaviCameraInfos) {
-
+        
     }
 
     @Override
@@ -537,12 +547,13 @@ public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> i
 
     @Override
     public void showCross(AMapNaviCross aMapNaviCross) {
-
+        String imgData = this.noData?this.bitmapToBase64(aMapNaviCross.getBitmap()):"";
+        sendEvent(mViewGroup,"showCross",imgData);
     }
 
     @Override
     public void hideCross() {
-
+        sendEvent(mViewGroup,"hideCross",null);
     }
 
     @Override
@@ -608,7 +619,7 @@ public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> i
 
     @Override
     public void onPlayRing(int i) {
-
+        sendEvent(mViewGroup,"onPlayRing",i);
     }
 
     @Override
@@ -639,6 +650,59 @@ public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> i
 
     @Override
     public void onNaviRouteNotify(AMapNaviRouteNotifyData aMapNaviRouteNotifyData) {
+        WritableMap map = Arguments.createMap();
+        map.putInt("distance",aMapNaviRouteNotifyData.getDistance());
+        map.putDouble("latitude",aMapNaviRouteNotifyData.getLatitude());
+        map.putDouble("longitude",aMapNaviRouteNotifyData.getLongitude());
+        map.putInt("notifyType",aMapNaviRouteNotifyData.getNotifyType());
+        map.putString("reason",aMapNaviRouteNotifyData.getReason());
+        map.putString("roadName",aMapNaviRouteNotifyData.getRoadName());
+        map.putString("subTitle",aMapNaviRouteNotifyData.getSubTitle());
+        map.putBoolean("isSuccess",aMapNaviRouteNotifyData.isSuccess());
+        sendEvent(mViewGroup,"onNaviRouteNotify",map);
+    }
+
+    private String bitmapToBase64(Bitmap bitmap) {
+
+        // 要返回的字符串
+        String reslut = null;
+
+        ByteArrayOutputStream baos = null;
+
+        try {
+
+            if (bitmap != null) {
+
+                baos = new ByteArrayOutputStream();
+                /**
+                 * 压缩只对保存有效果bitmap还是原来的大小
+                 */
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+                baos.flush();
+                baos.close();
+                // 转换为字节数组
+                byte[] byteArray = baos.toByteArray();
+
+                // 转换为字符串
+                reslut = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            } else {
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+
+            try {
+                if (baos != null) {
+                    baos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return reslut;
 
     }
 }
