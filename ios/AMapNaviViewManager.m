@@ -262,13 +262,6 @@ RCT_CUSTOM_VIEW_PROPERTY(lockMode, BOOL, AMapNaviDriveView)
 - (void)driveManager:(AMapNaviDriveManager *)driveManager showLaneBackInfo:(NSString *)laneBackInfo laneSelectInfo:(NSString *)laneSelectInfo
 {
     NSLog(@"showLaneInfo");
-    NSString* imgData;
-    if(!self.noData)
-    {
-        NSData *data = UIImageJPEGRepresentation(crossImage, 1.0f);
-        imgData = [data base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
-    }
-    laneSelectInfo.
     [self sendEvent:self.driveView params:@{@"type":@"showLaneBackInfo",@"params":@{
                                                     
                                                     }}];
