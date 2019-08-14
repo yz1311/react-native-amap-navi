@@ -52,11 +52,11 @@ RCT_EXPORT_METHOD(calculateRoute:(nonnull NSNumber *)reactTag
                   points:(nonnull NSArray *) points
                   strategy:(NSInteger) strategy
                   ) {
-    if(strategy == nil)
+    if(strategy == 0)
     {
         strategy = AMapNaviDrivingStrategySingleDefault;
     }
-    if(points != nil || [points count] >= 2) {
+    if(points != nil && [points count] >= 2) {
         self.wayPoints = [[NSMutableArray alloc] init];
         for (NSInteger i = 0; i < [points count]; i++) {
             NSDictionary* dict = [points objectAtIndex:i];
@@ -75,6 +75,28 @@ RCT_EXPORT_METHOD(calculateRoute:(nonnull NSNumber *)reactTag
                                                                     endPoints:@[self.endPoint]
                                                                     wayPoints:self.wayPoints
                                                               drivingStrategy:strategy];
+}
+
+RCT_EXPORT_METHOD(startNavi:(nonnull NSNumber *)reactTag
+                  naviMode:(NSInteger) naviMode
+                  ) {
+    //需要放在主线程中执行
+    switch (naviMode) {
+        case 1:
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[AMapNaviDriveManager sharedInstance] startGPSNavi];
+            });
+            break;
+        case 2:
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // 在这里执行长时间的操作 ...
+                // 你可以在任何线程/队列中执行回调函数
+                [[AMapNaviDriveManager sharedInstance] startEmulatorNavi];
+            });
+            break;
+        default:
+            break;
+    }
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(speechEnabled,BOOL,AMapNaviDriveView)
