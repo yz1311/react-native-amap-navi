@@ -343,6 +343,10 @@ public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> i
                 {
                     this.parsePointToNative(points);
                 }
+                if(pointList1==null||pointList1.size()==0||pointList3==null||pointList3.size()==0)
+                {
+                    return;
+                }
                 mAMapNavi.calculateDriveRoute(pointList1,pointList3,pointList2,strategyFlag);
                 break;
             case START_NAVI:
@@ -532,7 +536,7 @@ public class RNReactNativeAmapNaviManager extends SimpleViewManager<ViewGroup> i
 
     @Override
     public void updateCameraInfo(AMapNaviCameraInfo[] aMapNaviCameraInfos) {
-        
+
     }
 
     @Override

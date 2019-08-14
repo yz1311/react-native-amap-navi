@@ -72,6 +72,10 @@ RCT_EXPORT_METHOD(calculateRoute:(nonnull NSNumber *)reactTag
             }
         }
     }
+    if(self.startPoint == nil || self.endPoint == nil)
+    {
+        return;
+    }
     [[AMapNaviDriveManager sharedInstance] calculateDriveRouteWithStartPoints:@[self.startPoint]
                                                                     endPoints:@[self.endPoint]
                                                                     wayPoints:self.wayPoints

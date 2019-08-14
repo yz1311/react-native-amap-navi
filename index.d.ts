@@ -152,12 +152,11 @@ interface AMapNaviLocation {
 
 interface IAMapNaviViewProps extends ViewStyle{
   style?: any,
-  points: Array<any>,
   onNaviInfoUpdate: (naviInfo: NaviInfo) => void,
   onLockMap: (isLockMap:boolean) => void,
   lockMode?: boolean,
   //If true, disables the base64 data field from being generated (greatly improves performance on large photos)
-  noData: boolean,
+  noData?: boolean,
   speechEnabled?: boolean,
   overview?: boolean,
   settingMenuEnabled?: boolean,
