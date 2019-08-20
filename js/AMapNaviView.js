@@ -40,6 +40,10 @@ export default class AMapNaviView extends Component{
                 break;
             }
           }
+          else
+          {
+            this.props[event.nativeEvent.type](event.nativeEvent.params);
+          }
           break;
         default:
           this.props[event.nativeEvent.type](event.nativeEvent.params);

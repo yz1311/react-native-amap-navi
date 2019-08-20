@@ -1,5 +1,7 @@
 
 # react-native-amap-navi
+[![npm version](http://img.shields.io/npm/v/react-native-amap-navi.svg?style=flat-square)](https://npmjs.org/package/react-native-amap-navi "View this project on npm")
+[![npm version](http://img.shields.io/npm/dm/react-native-amap-navi.svg?style=flat-square)](https://npmjs.org/package/react-native-amap-navi "View this project on npm")
 高德地图导航库,react-native双平台,支持一键api调用和自定义view调用
 ## Getting started
 
