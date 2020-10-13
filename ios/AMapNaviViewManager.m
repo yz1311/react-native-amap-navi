@@ -398,12 +398,12 @@ RCT_CUSTOM_VIEW_PROPERTY(lockMode, BOOL, AMapNaviDriveView)
 
 - (void)driveViewCloseButtonClicked:(AMapNaviDriveView *)driveView
 {
-    
+    [self sendEvent:self.driveView params:@{@"type":@"onNaviCancel"}];
 }
 
 - (void)driveViewMoreButtonClicked:(AMapNaviDriveView *)driveView
 {
-    
+    [self sendEvent:self.driveView params:@{@"type":@"onNaviSetting"}];
 }
 
 - (void)driveViewTrunIndicatorViewTapped:(AMapNaviDriveView *)driveView
