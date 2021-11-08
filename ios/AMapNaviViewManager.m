@@ -398,7 +398,10 @@ RCT_CUSTOM_VIEW_PROPERTY(lockMode, BOOL, AMapNaviDriveView)
 
 - (void)driveViewCloseButtonClicked:(AMapNaviDriveView *)driveView
 {
-    
+//    NSLog(@"退出");
+    [[AMapNaviDriveManager sharedInstance] stopNavi];
+    [[SpeechSynthesizer sharedSpeechSynthesizer] stopSpeak];
+    [self sendEvent:self.driveView params:@{@"type":@"onNaviCancel",@"params":@{}}];
 }
 
 - (void)driveViewMoreButtonClicked:(AMapNaviDriveView *)driveView
